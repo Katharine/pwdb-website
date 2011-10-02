@@ -1,0 +1,82 @@
+div.item_tooltip {
+    border-width: 2px;
+    border-color: rgb(10,10,10);
+    border-style: solid;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+    width: 250px;
+    background-color:rgb(20, 20, 20); /* This one's for IE */
+    background-color:rgba(20, 20, 20, 0.8);
+    color: white;
+    padding: 2px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: lighter;
+    font-size: 12px;
+}
+
+div.item_tooltip p {
+    padding: 0px;
+    margin: 0px;
+    padding-left: 10px;
+    text-indent: -10px;
+}
+
+div.item_tooltip p.tooltip_description {
+    padding-left: 0px;
+    text-indent: 0px;
+}
+
+div.item_tooltip .tooltip_addon {
+    color: rgb(128, 128, 255);
+}
+
+ul.tooltip-set {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.tooltip-set-name {
+    color:#ffcb4a;
+}
+
+.item_tooltip .mob-title {
+    font-weight: bold;
+}
+
+.item_tooltip .spawn-location {
+    font-style: italic;
+}
+
+.tooltip-resource {
+    color: rgb(150, 150, 150);
+}
+
+.mob-level-150 {
+    color: rgb(255, 96, 0);
+}
+
+.requirement-unmet {
+    color: rgb(255, 0, 0);
+}
+
+.pw_color_0, .pw_color_ { color: rgb(255, 255, 255) !important; }
+.pw_color_1 { color: rgb(128, 128, 255) !important; }
+.pw_color_2 { color: rgb(255, 220, 80) !important; }
+.pw_color_3 { color: #aa32ff !important; }
+.pw_color_4 { color: rgb(255, 96, 0) !important; }
+.pw_color_5 { color: rgb(255, 255, 255) !important; }
+.pw_color_6 { color: #b0b0b0 !important; }
+.pw_color_7 { color: rgb(0, 255, 174) !important; }
+.pw_color_8 { color: #6cfb4b !important; }
+.pw_color_9 { color: rgb(255, 0, 0) !important; }
+.pw_color_10 { color: rgb(128, 255, 255) !important; }
+
+.pw-element-MT { color: rgb(230, 189, 78); }
+.pw-element-WD { color: rgb(93, 221, 93); }
+.pw-element-WT { color: rgb(74, 187, 255); }
+.pw-element-FR { color: rgb(255, 100, 100); }
+.pw-element-ET { color: rgb(239, 239, 85); }

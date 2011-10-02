@@ -1,0 +1,350 @@
+body {
+    background-color: black;
+    color: rgb(204, 204, 204);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    background-color: black;
+    background: url(/images/bg-stripe.png);
+    margin-top: 0px;
+}
+
+abbr {
+    border-bottom: 1px dotted rgb(100, 100, 100);
+    cursor: help;
+}
+
+a:link, a:visited {
+    color: rgb(100, 149, 237);
+}
+
+.translation {
+    color: rgb(150, 150, 150);
+    font-size: smaller;
+    font-style: italic;
+}
+
+#page {
+    text-align: center;
+}
+
+#level-select {
+    margin-right: 20px;
+}
+
+#main-content {
+    border: 1px solid rgb(64, 64, 64);
+    background-color: rgb(36, 36, 36);
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    max-width: 1240px;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#header {
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 40px;
+}
+
+#logo {
+    margin: 0px;
+    padding: 0px;
+    float: left;
+}
+
+#header-search {
+    float: right;
+    height: 40px;
+}
+
+#header-search input {
+    width: 200px;
+    margin-top: 10px;
+}
+
+.ui-autocomplete {
+    width: 190px;
+}
+
+.ui-autocomplete a {
+    font-size: 12px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.autocomplete-type {
+    display: none;
+}
+
+.ui-menu-item img {
+    float: left;
+    padding-right: 5px;
+}
+
+
+#logo a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+#footer {
+    text-align: center;
+}
+
+#poweredby {
+    font-size: 9px;
+}
+
+#main-content {
+    padding: 10px;
+}
+
+table.layout {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    border-width: 0px;
+}
+
+table.layout td {
+    vertical-align: top;
+}
+
+a:link.item-link, a:visited.item-link, a:link.mob-link, a:visited.item-link {
+    text-decoration: none;
+}
+
+/* Item page */
+
+#item-root-layout-table {
+    border-bottom: 1px solid rgb(64, 64, 64);
+}
+
+#tooltip-image-holder {
+    float: left;
+}
+
+.tooltip-wrapper .item_tooltip {
+    margin-left: 33px;
+}
+
+#tooltip-wrapper-cell {
+    width: 295px;
+}
+
+#random-stats-cell {
+    border-left: 1px solid rgb(64, 64, 64);
+}
+
+h2 {
+    margin: 0px;
+    padding: 0px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(64, 64, 64);
+    border-bottom-style: solid;
+    margin-bottom: 10px;
+}
+
+h3 {
+    margin: 0px;
+    padding: 0px;
+}
+
+#map-tabs h3 {
+    cursor: pointer;
+    padding-top: 5px;
+}
+
+#map-tabs p {
+    max-width: 550px;
+    overflow: hidden;
+}
+
+#map-tabs .squashed p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+img.item-tiny-icon {
+    height: 16px;
+    width: 16px;
+    vertical-align: top;
+    margin:0px;
+    padding: 0px;
+    padding-top: 2px;
+}
+
+#item-sidebar {
+    width: 300px;
+    vertical-align: top;
+}
+
+#item-sidebar h3 {
+    text-align: center;
+}
+
+#item-sidebar div.group {
+    border: 1px solid rgb(64, 64, 64);
+    background-color: black;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+#item-sidebar ul {
+    padding: 0px;
+    margin-left: 20px;
+}
+
+#item-sidebar table {
+    margin: 0px;
+}
+
+.item-random-stats {
+    margin-left: 5px;
+}
+
+.chart-table thead th {
+    text-align: center;
+}
+
+.chart-table th {
+    vertical-align: bottom;
+}
+
+.chart-table td, .chart-table td > div /* Because Firefox is dumb. */ {
+    height: 15px;
+    width: 40px;
+    position: relative;
+    text-align: center;
+}
+
+.chart-table .chart {
+    position: absolute;
+    bottom: 2px;
+    left: 0px;
+    width: 40px;
+    background-color: rgb(64, 64, 64);
+    z-index: 5;
+}
+
+.chart-table .text {
+    z-index: 10;
+    position: absolute;
+    bottom: 0px;
+    text-align: center;
+    width: 40px;
+}
+
+.hyper-exp {
+    font-style: italic;
+    color: rgb(150, 150, 150);
+}
+
+#map-tabs p {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+#map-tabs > div {
+    overflow-x: auto;
+}
+
+.pw-map {
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+#fancybox-outer .pw-map {
+    cursor: auto;
+}
+
+.map-coord {
+    cursor: pointer;
+}
+
+.map-coord.highlighted {
+    color: rgb(236, 150, 206);
+}
+
+#item-socket-table {
+    padding-bottom: 10px;
+}
+
+.item-addon-header {
+    cursor: pointer;
+}
+
+.item-addon-header.group-55 {
+    cursor: auto;
+}
+
+.item-addon-header th, .item-addon-header td {
+    border-top: 1px solid rgb(64, 64, 64);
+}
+
+#addon-tabs {
+    width: 400px;
+}
+
+#addon-tabs table {
+    width: 100%;
+}
+
+.refine-table .refine-amount {
+    text-align: right;
+}
+
+.refine-table .refine-delta {
+    text-align: left;
+}
+
+.refine-table td, .refine-table th {
+    text-align: center;
+}
+
+/* Specifying #item-sidebar is necessary to override the `#item-sidebar table` set earlier. */
+#item-sidebar .refine-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.recipe-table {
+    width: 100%;
+}
+
+.recipe-table td {
+    border-top: 1px solid rgb(64, 64, 64);
+}
+
+.recipe-table ul {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
+
+.recipe-table th {
+    cursor: pointer;
+}
+
+.headerSortDown, .headerSortUp {
+    background-color: rgb(32, 32, 32);
+}
+
+.weapon-tree img {
+    vertical-align: middle;
+    margin-right: -5px;
+}

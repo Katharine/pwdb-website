@@ -1,0 +1,40 @@
+/* Main search/home page (index.tpl) - Think Google! */
+
+#index_container {
+    text-align: center;
+}
+
+#index_search_form input[type=submit] {
+    display: none;
+}
+
+#search_box {
+    width: 400px;
+    font-size: 17px;
+    color: black;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    -webkit-border-radius: 4px;
+}
+
+h1 {
+    color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.ui-autocomplete {
+    font-size: 12px;
+}
+
+.autocomplete-type {
+    display: inline !important; /* To override the hiding in main.css. This is kidna dumb. */
+    float: right;
+    color: gray;
+    font-style: italic;
+}
+
+.ui-menu-item img {
+    float: left;
+    padding-right: 5px;
+}
