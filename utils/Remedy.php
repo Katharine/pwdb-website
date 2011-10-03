@@ -7,6 +7,9 @@ class Remedy extends Item {
         return new Remedy(mysql_fetch_object(MySQL::instance()->query("SELECT * FROM remedies WHERE id = {$id}", true)));
     }
 
+    protected $_level, $_hp, $_mp, $_cooldown, $_recovery_time;
+    const SERIALIZED_SIZE = 5;
+
     protected function render_tooltip_requisites() {
         if($this->_level > 0) {
             return "<p>Requisite Lv. {$this->_level}</p>";
@@ -15,15 +18,24 @@ class Remedy extends Item {
         }
     }
 
-    protected $_level, $_hp, $_mp, $_cooldown, $_recovery_time;
+    protected function to_array() {
+        return array_merge(array(
+            $this->_level, $this->_hp, $this->_mp, $this->_cooldown, $this->_recovery_time
+        ), parent::to_array());
+    }
+
+    protected function from_array($array) {
+        list($this->_level, $this->_hp, $this->_mp, $this->_cooldown, $this->_recovery_time) = array_slice($array, 0, self::SERIALIZED_SIZE);
+        parent::from_array(array_slice($array, self::SERIALIZED_SIZE));
+    }
 
     public function __construct($record) {
         parent::__construct($record);
-        $this->_level = $record->level;
-        $this->_hp = $record->hp;
-        $this->_mp = $record->mp;
-        $this->_cooldown = $record->cooldown;
-        $this->_recovery_time = $record->recovery_time;
+        $this->_level = (int)$record->level;
+        $this->_hp = (int)$record->hp;
+        $this->_mp = (int)$record->mp;
+        $this->_cooldown = (int)$record->cooldown;
+        $this->_recovery_time = (int)$record->recovery_time;
     }
 
     protected function render_effect() {
