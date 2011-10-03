@@ -49,6 +49,10 @@
         {if $item->decompose_to}
             <li>Decomposes to{if $item->decompose_amount>1} {$item->decompose_amount}{/if}{$item->decompose_to->link()}{if $item->decompose_price} for {$item->decompose_price|number_format} coins{/if}</li>
         {/if}
+        {* This should really be moved elsewhere *}
+        {if $item->pet}
+            <li>Hatches to{$item->pet->link()}</li>
+        {/if}
         {block name='item_sidebar_list'}{/block}
         </ul>
     </div>

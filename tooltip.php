@@ -13,6 +13,9 @@ switch($_GET['kind']) {
     case 'resource':
         $item = Resource::FromID($id);
         break;
+    case 'pet':
+        $item = Pet::FromID($id);
+        break;
 }
 if(!$item) {
     print "<div class='item_tooltip'>Item not found.</div>";

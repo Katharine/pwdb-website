@@ -24,6 +24,9 @@
             {if $dq_sell > 0}
             <li><abbr title="Average Dragon Quest points per kill">DQ points</abbr>: <span class='level-adjust-drops'>{$dq_sell|number_format:2}</span></li>
             {/if}
+            {if $mob->egg}
+            <li>Becomes{$mob->egg->link()}when tamed</li>
+            {/if}
             <li>Drop count: 
                 <table class="chart-table" id="item-socket-table">
                 <thead>

@@ -59,4 +59,24 @@ $(function() {
                 background: 'rgba(0,0,0,0)',
                 border: {color: 'rgba(0,0,0,0)'}}});
     });
+    $(".pet-link").each(function() {
+        var item_id = $(this).attr('href').split('/')[2];
+        $(this).qtip({
+            content: {
+                url: '/tooltip.php',
+                data: {id: item_id, kind: 'pet'},
+                method: 'get'}, 
+            position: {
+                target: 'mouse',
+                adjust: {
+                    screen: true,
+                    mouse: false,
+                    x: 5,
+                    y: 5}}, 
+            style: {
+                width: 260,
+                padding: 0,
+                background: 'rgba(0,0,0,0)',
+                border: {color: 'rgba(0,0,0,0)'}}});
+    });
 });

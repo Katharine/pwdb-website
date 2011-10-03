@@ -22,6 +22,7 @@ $(function(){
     $('#addon-tabs').tabs();
     $('#more-tabs').tabs();
     $('#map-tabs').tabs();
+    $('#pet-tabs').tabs();
 
     $('.map-point').hover(function(e) {
         var cls = $(this).attr('class').split(' ');

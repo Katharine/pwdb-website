@@ -116,7 +116,7 @@ table.layout td {
     vertical-align: top;
 }
 
-a:link.item-link, a:visited.item-link, a:link.mob-link, a:visited.item-link {
+a:link.item-link, a:visited.item-link, a:link.mob-link, a:visited.mob-link, a:link.pet-link, a:visited.pet-link {
     text-decoration: none;
 }
 
@@ -347,4 +347,28 @@ img.item-tiny-icon {
 .weapon-tree img {
     vertical-align: middle;
     margin-right: -5px;
+}
+
+/* Pet page */
+
+table.pet-stats, .pet-stats th, .pet-stats td {
+    border: 1px solid rgb(64, 64, 64);
+    text-align: center;
+    border-collapse: collapse;
+}
+
+table.pet-stats {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pet-stats td, .pet-stats th {
+    padding: 4px;
+}
+
+.pet-stats tr:nth-of-type(even) {
+    background-color: rgb(10, 10, 10);
+}
+.pet-stats tr:nth-of-type(odd) {
+    background-color: rgb(30, 30, 30);
 }

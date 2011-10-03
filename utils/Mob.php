@@ -30,8 +30,12 @@ class Mob extends Spawn implements Serializable {
     }
 
     public function serialize() {
+        $egg = null;
+        if($this->_egg) {
+            $egg = $this->_egg->id;
+        }
         return igbinary_serialize(array(
-            $this->_id, $this->_type, $this->_name, $this->_strong_element, $this->_weak_element, $this->_model, $this->_gfx, $this->_level, $this->_egg, $this->_hp, $this->_phys_def, $this->_metal_def,
+            $this->_id, $this->_type, $this->_name, $this->_strong_element, $this->_weak_element, $this->_model, $this->_gfx, $this->_level, $egg, $this->_hp, $this->_phys_def, $this->_metal_def,
             $this->_wood_def, $this->_water_def, $this->_fire_def, $this->_earth_def, $this->_exp, $this->_spirit, $this->_coins_mean, $this->_coins_variance, $this->_accuracy,
             $this->_evasion, $this->_min_patk, $this->_max_patk, $this->_range, $this->_interval, $this->_min_matk, $this->_max_matk, $this->_aggressive, $this->_aggro_range,
             $this->_aggro_time, $this->_walk_speed, $this->_run_speed, $this->_swim_speed, $this->_drop_distribution, $this->_drop_multiplier, $this->_spawns,
@@ -39,11 +43,16 @@ class Mob extends Spawn implements Serializable {
     }
 
     public function unserialize($data) {
-        list($this->_id, $this->_type, $this->_name, $this->_strong_element, $this->_weak_element, $this->_model, $this->_gfx, $this->_level, $this->_egg, $this->_hp, $this->_phys_def, $this->_metal_def,
+        list($this->_id, $this->_type, $this->_name, $this->_strong_element, $this->_weak_element, $this->_model, $this->_gfx, $this->_level, $egg, $this->_hp, $this->_phys_def, $this->_metal_def,
             $this->_wood_def, $this->_water_def, $this->_fire_def, $this->_earth_def, $this->_exp, $this->_spirit, $this->_coins_mean, $this->_coins_variance, $this->_accuracy,
             $this->_evasion, $this->_min_patk, $this->_max_patk, $this->_range, $this->_interval, $this->_min_matk, $this->_max_matk, $this->_aggressive, $this->_aggro_range,
             $this->_aggro_time, $this->_walk_speed, $this->_run_speed, $this->_swim_speed, $this->_drop_distribution, $this->_drop_multiplier, $this->_spawns) = igbinary_unserialize($data); 
         $this->_kind = 'mob';
+        if($egg) {
+            $this->_egg = Egg::FromID($egg);
+        } else {
+            $this->_egg = null;
+        }
     }
 
     protected $_id, $_type, $_name, $_strong_element, $_weak_element, $_model, $_gfx, $_level, $_egg, $_hp, $_phys_def, $_metal_def;
@@ -61,7 +70,7 @@ class Mob extends Spawn implements Serializable {
         $this->_model = $record->model;
         $this->_gfx = $record->gfx;
         $this->_level = (int)$record->level;
-        $this->_egg = (int)$record->egg;
+        $this->_egg = Egg::FromID((int)$record->egg);
         $this->_hp = (int)$record->hp;
         $this->_phys_def = (int)$record->phys_def;
         $this->_metal_def = (int)$record->metal_def;

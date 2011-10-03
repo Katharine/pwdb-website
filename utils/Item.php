@@ -39,6 +39,9 @@ class Item implements Serializable {
                 case 'shard':
                     $ret = Soulgem::FromID($id);
                     break;
+                case 'egg':
+                    $ret = Egg::FromID($id);
+                    break;
                 default:
                     $ret = new Item(mysql_fetch_object($link->query("SELECT * FROM generic_items WHERE id = " . (int)$id, true)));
                     break;
