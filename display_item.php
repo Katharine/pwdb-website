@@ -13,7 +13,6 @@ if($template->isCached('items/generic.tpl', (string)$id)) {
 }
 $item = Item::FromID($_GET['id']);
 if(!$item) {
-    $template->caching = 0;
     $template->display('404.tpl');
     die();
 }

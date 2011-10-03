@@ -10,7 +10,6 @@ if($template->isCached('mob.tpl', $id)) {
 }
 $mob = Mob::FromID($id);
 if(!$mob) {
-    $template->caching = 0;
     $template->display('404.tpl');
     die();
 }

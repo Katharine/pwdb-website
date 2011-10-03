@@ -10,7 +10,6 @@ if($template->isCached('resource.tpl', $id)) {
 }
 $resource = Resource::FromID($id);
 if(!$resource) {
-    $template->caching = 0;
     $template->display('404.tpl');
     die();
 }
