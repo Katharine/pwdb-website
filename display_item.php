@@ -92,7 +92,7 @@ $icon_parts = explode('\\', $item->icon);
 $actual_icon = array_pop($icon_parts);
 // Don't do this if actual_icon is empty or we try and load every extant item and run out of memory.
 if(!empty($actual_icon)) {
-    $link->query("SELECT id, icon FROM items WHERE id != {$id} AND name != '' AND icon LIKE '%".$link->escape($actual_icon)."'");
+    $link->query("SELECT id, icon FROM items WHERE id != {$id} AND name != '' AND icon LIKE '%\\\\\\\\".$link->escape($actual_icon)."'");
     while($row = $link->fetchrow()) {
         $identical = Item::FromID($row->id);
         if($identical) {
