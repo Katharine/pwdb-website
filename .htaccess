@@ -2,6 +2,7 @@ RewriteEngine On
 RewriteBase /
 RewriteRule ^item/([0-9]+)$ display_item.php?id=$1
 RewriteRule ^mob/([0-9]+)$ display_mob.php?id=$1
+RewriteRule ^resource/([0-9]+)$ display_resource.php?id=$1
 
 ErrorDocument 404 /404.php
 
