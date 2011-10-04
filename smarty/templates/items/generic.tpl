@@ -13,6 +13,7 @@
 {/block}
 
 {block name='details'}
+    {block name=item_details}
     {if $farmed_from}
     <div id="map-tabs">
         <ul>
@@ -28,8 +29,8 @@
         </div>
         {/foreach}
     </div>
-    {block name=item_details}{/block}
     {/if}
+    {/block}
 {/block}
 
 {block name='sidebar'}
