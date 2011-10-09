@@ -139,9 +139,9 @@ class Mob extends Spawn implements Serializable {
         return $tip;
     }
 
-    public function render_tooltip() {
+    public function render_tooltip($map=null, $x=null, $y=null) {
         $tip = $this->render_tooltip_header();
-        $tip .= $this->render_tooltip_location();
+        $tip .= $this->render_tooltip_location($map, $x, $y);
         $tip .= "<p class='mob-level-{$this->_level}'>Level <span class='mob-level-figure'>" . $this->get_level() . "</span></p>";
         $tip .= "<p>HP: " . number_format($this->_hp) . "</p>";
         $tip .= "</div>";

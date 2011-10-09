@@ -239,4 +239,20 @@ class Item implements Serializable {
     public function decomposes_from() {
         return self::DecomposedFrom($this->_id);
     }
+
+    public function sold_by() {
+        $link = MySQL::instance();
+        $result = $link->query(
+           "SELECT contribution, npcs.*
+            FROM npc_service_sell_items AS sell, npc_services AS service, npcs, spawn_points
+            WHERE item = {$this->_id}
+                AND service.service = sell.service
+                AND npcs.id = service.npc
+                AND spawn_points.spawn = npcs.id", true);
+        $sellers = array();
+        while($row = mysql_fetch_object($result)) {
+            $sellers[] = array("contribution" => (int)$row->contribution, 'npc' => new NPC($row));
+        }
+        return $sellers;
+    }
 }

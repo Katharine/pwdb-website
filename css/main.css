@@ -116,8 +116,19 @@ table.layout td {
     vertical-align: top;
 }
 
-a:link.item-link, a:visited.item-link, a:link.mob-link, a:visited.mob-link, a:link.pet-link, a:visited.pet-link {
+table.layout table td {
+    vertical-align: middle;
+}
+
+a:link.item-link, a:visited.item-link,
+a:link.mob-link, a:visited.mob-link,
+a:link.npc-link, a:visited.npc-link,
+a:link.pet-link, a:visited.pet-link {
     text-decoration: none;
+}
+
+.no-spawn {
+    text-decoration: line-through !important;
 }
 
 /* Item page */
@@ -349,6 +360,15 @@ img.item-tiny-icon {
     margin-right: -5px;
 }
 
+.npc-list {
+    width: 400px;
+}
+
+p.expand-list {
+    cursor: pointer;
+    margin: 0px;
+}
+
 /* Pet page */
 
 table.pet-stats, .pet-stats th, .pet-stats td {
@@ -371,4 +391,10 @@ table.pet-stats {
 }
 .pet-stats tr:nth-of-type(odd) {
     background-color: rgb(30, 30, 30);
+}
+
+/* NPC page */
+
+.npc-greeting {
+    font-style: italic;
 }

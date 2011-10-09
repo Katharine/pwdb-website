@@ -112,6 +112,16 @@ $(function(){
     $('#map-tabs h3, #map-tabs p').click(function() {
         $(this).parent().toggleClass('squashed');
     });
+
+    $('.expand-list').click(function() {
+        var list = $(this).prevAll('.more-list');
+        if(!list.is(':hidden')) {
+            $(this).html('More…');
+        } else {
+            $(this).html('Less…');
+        }
+        list.slideToggle();
+    });
 });
 
 function exp_multiplier(difference) {
@@ -229,4 +239,8 @@ function update_level_values(initial_run) {
     });
 
     $('.recipe-table').tablesorter();
+
+    // NPC page
+    $('#npc-services').accordion({autoHeight: false, collapsible: true});
+    $('.npc-tabs').tabs();
 }

@@ -16,10 +16,18 @@ switch($_GET['kind']) {
     case 'pet':
         $item = Pet::FromID($id);
         break;
+    case 'npc':
+        $item = NPC::FromID($id);
+        break;
 }
 if(!$item) {
     print "<div class='item_tooltip'>Item not found.</div>";
 } else {
-    print $item->render_tooltip();
+    $map = $x = $y = null;
+    if(isset($_GET['map']) && isset($_GET['x']) && isset($_GET['y'])) {
+        print $item->render_tooltip($_GET['map'], $_GET['x'], $_GET['y']);
+    } else {
+        print $item->render_tooltip();
+    }
 }
 ?>

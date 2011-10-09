@@ -54,10 +54,10 @@ class Resource extends Spawn implements Serializable {
         $this->_kind = 'resource';
     }
 
-    public function render_tooltip() {
+    public function render_tooltip($map=null, $x=null, $y=null) {
         $tip = "<div class='item_tooltip'>";
         $tip .= "<p class='resource-title pw_color_0'>{$this->_name} <span class='tooltip-resource'>(resource)</span></p>";
-        $tip .= $this->render_tooltip_location();
+        $tip .= $this->render_tooltip_location($map, $x, $y);
         if($this->_level || $this->_tool) {
             $tip .= "<p>Requires ";
             $requires = array();

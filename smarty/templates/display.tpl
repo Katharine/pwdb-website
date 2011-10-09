@@ -26,6 +26,7 @@
         <tr>
             <td>
                 <h2>{block name=name}(name block){/block}</h2>
+                {block name=main_content}
                 <table class="layout">
                     <tr>
                         <td id="tooltip-wrapper-cell">
@@ -38,6 +39,7 @@
                         </td>
                     </tr>
                 </table>
+                {/block}
             </td>
             <td id="item-sidebar">
                 {block name=sidebar}<div>(sidebar block)</div>{/block}

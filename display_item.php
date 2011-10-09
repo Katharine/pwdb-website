@@ -118,6 +118,7 @@ $template->assign('used_for', $used_for);
 $template->assign('used_to_reforge', $reforges);
 $template->assign('reforged_using', $reforged_by);
 $template->assign('decomposed_from', $item->decomposes_from());
+$template->assign('sold_by', $item->sold_by());
 $template->assign('dropped_from', $drops_from);
 $template->assign('same_model', $same_model);
 $template->assign('same_icon', $same_icon);

@@ -52,21 +52,20 @@ class Map {
         return $MAP_NAMES[$this->_id];
     }
 
-    public function add_point($x, $y, $z, $kind=null, $id=null) {
-        $this->_points[] = array('x' => $x, 'y' => $y, 'z' => $z, 'kind' => $kind, 'id' => $id);
+    private static function pnpoly($points, $x, $y) {
+        $nvert = count($points);
+        $inside = false;
+        for($i = 0, $j = $nvert - 1; $i < $nvert; $j = $i++) {
+            if((($points[$i][1] > $y) != ($points[$j][1] > $y)) && ($x < ($points[$j][0] - $points[$i][0]) * ($y - $points[$i][1]) / ($points[$j][1]-$points[$i][1]) + $points[$i][0])) {
+                    $inside = !$inside;
+                }
+        }
+        return $inside;
     }
 
-    public function point_count() {
-        return count($this->_points);
-    }
-
-    public function points() {
-        return $this->_points;
-    }
-
-    public function render($size = 'small') {
+    public function point_to_pixels($x, $y, $size='small') {
         $map_origins = array(
-            'wor' => array(1470, -4, 0.695, 0.695, 0),
+            'wor' => array(1515, 16, 0.68, 0.68, 0),
             'a01' => array(-330, -420, 8, 8,4),
             'a02' => array(-318, -512.5, 15.75, 15.72, 0),
             'a05' => array(-315, -528, 18, 18.55, 0),
@@ -104,35 +103,101 @@ class Map {
             $h /= 2;
         }
         list($ox, $oy, $px, $py, $k) = $map_origins[$this->_id];
+        $x = abs(($x + $ox) * $px - 1024);
+        if($this->_id == 'wor') {
+            $x += 234;
+        }
+        $y = abs(($y + $oy) * $py - 768);
+        if($k == 2) {
+            $x1 = $x;
+            $x = $y;
+            $y = $x1;
+        }
+        if($k == 1) {
+            $x = 1024 - $x;
+        }
+        if($k == 3) {
+            $y = 768 - $y;
+        }
+        if($k == 4) {
+            $x = 1024 - $x;
+            $y = 768 - $y;
+        }
+        if($size == 'small') {
+            $x /= 2;
+            $y /= 2;
+        }
+        $x = (int)round($x);
+        $y = (int)round($y);
+        return array($x, $y);
+    }
+
+    public function get_place_name($x, $y) {
+        // For now we only have precinct data for the main world ("wor")
+        if($this->_id != 'wor') {
+            return $this->get_name();
+        }
+        $x = (int)$x;
+        $y = (int)$y;
+
+        // Get all possible areas, restricting by bounding box.
+        $result = MySQL::instance()->query("SELECT name, AsText(region) AS poly FROM precincts WHERE CONTAINS(region, POINT({$x},{$y})) ORDER BY id ASC", true);
+
+        // Optimisation: in the (likely) event there's only one choice, we must be in it, so just return that.
+        if(mysql_num_rows($result) === 1) {
+            return mysql_result($result, 0, 0);
+        }
+
+        // Clean up the Well Known Text into something that is actually of value to us.
+        $regions = array();
+        while($row = mysql_fetch_object($result)) {
+            $regions[$row->name] = explode(',', substr($row->poly, 9, -2));
+        }
+        foreach($regions as &$region) {
+            foreach($region as &$points) {
+                $points = explode(' ', $points);
+                $points[0] = (float)$points[0];
+                $points[1] = (float)$points[1];
+            }
+        }
+        unset($region);
+
+        // Check if we're actually in each of the regions; jump out as soon as we find one.
+        foreach ($regions as $name => $region) {
+            if(self::pnpoly($region, $x, $y)) {
+                return $name;
+            }
+        }
+
+        // We apparently don't exist. Fall back on the map name.
+        return $this->get_name();
+    }
+
+    public function add_point($x, $y, $z, $kind=null, $id=null) {
+        $this->_points[] = array('x' => $x, 'y' => $y, 'z' => $z, 'kind' => $kind, 'id' => $id);
+    }
+
+    public function point_count() {
+        return count($this->_points);
+    }
+
+    public function points() {
+        return $this->_points;
+    }
+
+    public function render($size = 'small') {
+        $w = 1024;
+        $h = 768;
+        if($size == 'small') {
+            $w = 512;
+            $h = 384;
+        }
         $map = "<div class='pw-map map-{$size} map-{$this->_id}' style='height: {$h}px; width: {$w}px; background: url(/images/pwi/maps/{$size}/{$this->_id}); position: relative;'>\n";
         foreach($this->_points as $point) {
-            $x = abs(($point['x'] + $ox) * $px - 1024);
-            if($this->_id == 'wor') {
-                $x += 234;
-            }
-            $y = abs(($point['y'] + $oy) * $py - 768);
-            if($k == 2) {
-                $x1 = $x;
-                $x = $y;
-                $y = $x1;
-            }
-            if($k == 1) {
-                $x = 1024 - $x;
-            }
-            if($k == 3) {
-                $y = 768 - $y;
-            }
-            if($k == 4) {
-                $x = 1024 - $x;
-                $y = 768 - $y;
-            }
-            if($size == 'small') {
-                $x /= 2;
-                $y /= 2;
-            }
-            $x = (int)round($x - 5);
-            $y = (int)round($y - 5);
-            $class = "map-point x-" . (int)round($point['x']) . " y-" . (int)round($point['y']) . " z-" . (int)round($point['z']);
+            list($x, $y) = $this->point_to_pixels($point['x'], $point['y'], $size);
+            $x -= 5;
+            $y -= 5;
+            $class = "map-point map-{$this->_id} x-" . (int)round($point['x']) . " y-" . (int)round($point['y']) . " z-" . (int)round($point['z']);
             $map .= "<a href='/{$point['kind']}/{$point['id']}' class='{$point['kind']}-link'><img src='/images/point' class='{$class}' alt='x' style='position: absolute; left: {$x}px; top: {$y}px;'></a>\n";
         }
         $map .= "</div>";

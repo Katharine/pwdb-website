@@ -61,11 +61,12 @@
 {/block}
 
 {block name=more}
-    {if $created_by || $used_for || $used_to_reforge || $dropped_from || $decomposed_from || $same_model || $same_icon || $children || $parents}
+    {if $created_by || $used_for || $used_to_reforge || $dropped_from || $decomposed_from || $same_model || $same_icon || $children || $parents || $sold_by}
     <h3>More Information</h3>
     <div id="more-tabs">
         <ul>
             {if $children || $parents}<li><a href="#more-item-tree">Item tree</a></li>{/if}
+            {if $sold_by}<li><a href="#more-sold-by">Sold by ({$sold_by|count|number_format})</a></li>{/if}
             {if $dropped_from}<li><a href="#more-dropped">Drops from ({$dropped_from|count|number_format})</a></li>{/if}
             {if $created_by}<li><a href="#more-created">Created with ({$created_by|count|number_format})</a></li>{/if}
             {if $used_for}<li><a href="#more-used">Can create ({$used_for|count|number_format})</a></li>{/if}
@@ -108,11 +109,42 @@
             {call render_parent_tree_end node=$parents}
         </div>
         {/if}
+        {if $sold_by}
+        <div id="more-sold-by">
+            <table class='recipe-table'>
+                <thead>
+                    <tr><th>NPC</th><th>Price</th><th>Location</th></tr>
+                </thead>
+                <tbody>
+                    {foreach from=$sold_by item=sale}
+                    <tr>
+                        <td>
+                            {$sale.npc->link()}
+                        </td>
+                        <td>
+                            {$item->buy_price|number_format} coins
+                            {if $sale.contribution}
+                            and {$sale.contribution|number_format} contribution
+                            {/if}
+                        </td>
+                        <td>
+                            <ul>
+                            {foreach from=$sale.npc->location_summary() item=location}
+                                <li>{$location}</li>
+                            {/foreach}
+                            </ul>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+        {/if}
         {if $dropped_from}
         <div id="more-dropped">
             <table class='recipe-table'>
                 <thead>
-                    <tr><th>Mob</th><th>Level</th><th>Nominal Drop Rate</th><th>Actual Drop Rate</th></tr>
+                    <tr><th>Mob</th><th>Level</th><th>Location</th><th>Nominal Drop Rate</th><th>Actual Drop Rate</th></tr>
                 </thead>
                 <tbody>
                     {foreach from=$dropped_from item=drop}
@@ -122,6 +154,13 @@
                         </td>
                         <td>
                             <span class="row-mob-level">{$drop.mob->get_level()}</span>
+                        </td>
+                        <td>
+                            <ul>
+                            {foreach from=$drop.mob->location_summary() item=location}
+                                <li>{$location}</li>
+                            {/foreach}
+                            </ul>
                         </td>
                         <td>
                             {($drop.rate * 100)|number_format:2}%
@@ -139,7 +178,7 @@
         <div id="more-created">
             <table class='recipe-table'>
                 <thead>
-                    <tr><th>Ingredients</th><th>Output</th></tr>
+                    <tr><th>Ingredients</th><th>Output</th><th>NPC</th></tr>
                 </thead>
                 <tbody>
                     {foreach from=$created_by item=recipe}
@@ -162,6 +201,22 @@
                             {/foreach}
                             </ul>
                         </td>
+                        <td class='npc-list'>
+                            <ul>
+                            {$i=0}
+                            {foreach from=$recipe->get_craft_npcs() item=npc}
+                                <li>{$npc->link()}{if $npc->territory}(must own territory){/if}</li>
+                                {$i = $i+1}
+                                {if $i > 5}
+                            </ul>
+                            <ul class='more-list' style="display: none;">
+                                {/if}
+                            {/foreach}
+                            </ul>
+                            {if $i > 6}
+                            <p class='expand-list'>More…</p>
+                            {/if}
+                        </td>
                     </tr>
                     {/if}
                     {/foreach}
@@ -173,7 +228,7 @@
         <div id="more-used">
             <table class='recipe-table'>
                 <thead>
-                    <tr><th>Item</th><th>Requires</th></tr>
+                    <tr><th>Item</th><th>Requires</th><th>NPC</th></tr>
                 </thead>
                 <tbody>
                     {foreach from=$used_for item=recipe}
@@ -195,6 +250,22 @@
                                 <li>{$recipe->price|number_format} coins</li>
                             {/if}
                             </ul>
+                        </td>
+                        <td class='npc-list'>
+                            <ul>
+                            {$i=0}
+                            {foreach from=$recipe->get_craft_npcs() item=npc}
+                                <li>{$npc->link()}{if $npc->territory}(must own territory){/if}</li>
+                                {$i = $i+1}
+                                {if $i == 5}
+                            </ul>
+                            <ul class='more-list' style="display: none;">
+                                {/if}
+                            {/foreach}
+                            </ul>
+                            {if $i > 6}
+                            <p class='expand-list'>More…</p>
+                            {/if}
                         </td>
                     </tr>
                     {/if}
