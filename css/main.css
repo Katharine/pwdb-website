@@ -116,10 +116,6 @@ table.layout td {
     vertical-align: top;
 }
 
-table.layout table table td {
-    vertical-align: middle;
-}
-
 a:link.item-link, a:visited.item-link,
 a:link.mob-link, a:visited.mob-link,
 a:link.npc-link, a:visited.npc-link,
@@ -337,8 +333,9 @@ img.item-tiny-icon {
     width: 100%;
 }
 
-.recipe-table td {
+table.recipe-table td {
     border-top: 1px solid rgb(64, 64, 64);
+    vertical-align: middle;
 }
 
 .recipe-table ul {
