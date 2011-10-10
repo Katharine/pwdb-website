@@ -116,7 +116,7 @@ table.layout td {
     vertical-align: top;
 }
 
-table.layout table td {
+table.layout table table td {
     vertical-align: middle;
 }
 

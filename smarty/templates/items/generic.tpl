@@ -119,7 +119,7 @@
                     {foreach from=$sold_by item=sale}
                     <tr>
                         <td>
-                            {$sale.npc->link()}
+                            {$sale.npc->link()}{if $sale.npc->territory}(must own territory){/if}
                         </td>
                         <td>
                             {$item->buy_price|number_format} coins
