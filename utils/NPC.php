@@ -31,7 +31,7 @@ class NPC extends Spawn {
         $this->_killable = (bool)((int)$record->killable);
         $this->_model = $record->model;
         $this->_mob = Mob::FromID($record->mob);
-        $this->_introduction = $record->introduction;
+        $this->_introduction = Text::ToHTML($record->introduction);
         $this->_territory = (bool)((int)$record->territory);
     }
 

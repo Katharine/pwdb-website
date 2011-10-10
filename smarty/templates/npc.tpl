@@ -17,16 +17,29 @@
         {foreach from=$spawns item=map key=id}
         <div id="map-{$id}" class="squashed">
             {$map->render()}
-            <p>{foreach from=$map->points() item=point}<span class='map-coord x-{$point.x|round} y-{$point.y|round} z-{$point.z|round}'>{$point.x|round} {$point.y|round} ({$point.z|round})</span>; {/foreach}</p>
         </div>
         {/foreach}
     </div>
     {/if}
     </div>
     {foreach from=$services item=service}
-    {if get_class($service) != 'NPCService'}
+    {if $service && get_class($service) != 'NPCService'}
     <h3><a href="#">{$service->name()}</a></h3>
-    <div>
+    <div>    
+        {if $service instanceof NPCServiceSkill}
+        <table class="recipe-table">
+            <thead>
+                <tr><th>Skill</th></tr>
+            </thead>
+            <tbody>
+                {foreach from=$service->skills item=skill}
+                <tr>
+                    <td>{$skill}</td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        {else}
         <div class='npc-tabs'>
         <ul>
         {$i=1}
@@ -89,6 +102,7 @@
             {$i=$i+1}
         {/foreach}
         </div>
+        {/if}
     </div>
     {/if}
     {/foreach}
@@ -105,6 +119,9 @@
             <li><em>{$map->get_place_name($spawn.x, $spawn.y)}</em>: {$spawn.x|number_format} {$spawn.y|number_format} ({$spawn.z|number_format})</li>
         {/foreach}
         {/foreach}
+        {if $npc->territory}
+            <li>Must own territory to use NPC</li>
+        {/if}
     </ul>
 </div>
 {/if}

@@ -45,6 +45,9 @@ class NPCService {
             case 'crafting':
                 $ret = new NPCServiceCraft($id);
                 break;
+            case 'skill':
+                $ret = new NPCServiceSkill($id);
+                break;
             case 'start_quest':
                 // $ret = NPCServiceStartQuest::FromID($id);
                 // break;
