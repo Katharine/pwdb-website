@@ -20,8 +20,8 @@
         </div>
         {/foreach}
     </div>
-    {/if}
     </div>
+    {/if}
     {foreach from=$services item=service}
     {if $service && get_class($service) != 'NPCService'}
     <h3><a href="#">{$service->name()}</a></h3>
@@ -81,7 +81,7 @@
                         <td>
                             <ul>
                             {foreach from=$recipe->outputs item=output}
-                                <li>{if $recipe->quantity != 1}{$recipe->quantity|number_format}x{/if}{$output.item->link()}{if $output.probability != 1} ({($output.probability * 100)|number_format}){/if}</li>
+                                <li>{if $recipe->quantity != 1}{$recipe->quantity|number_format}x{/if}{$output.item->link()}{if $output.probability != 1} ({($output.probability * 100)|number_format}%){/if}</li>
                             {/foreach}
                             </ul>
                         </td>
