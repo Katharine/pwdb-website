@@ -3,6 +3,19 @@ require_once 'utils.php';
 
 class Map {
     private $_name, $_id, $_points;
+
+    public static function FromID($id) {
+        if($id == 1) {
+            return new Map('wor');
+        } else if($id >= 100 && $id < 200) {
+            return new Map('a' . ($id - 100));
+        } else if($id >= 200 && $id < 300) {
+            return new Map('b' . ($id - 200));
+        } else {
+            return null;
+        }
+    }
+
     public function __construct($id) {
         $this->_id = $id;
         $this->_points = array();

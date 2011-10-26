@@ -21,6 +21,9 @@ class Element {
     const ITEM_NO_LEAVE_AREA    = 0x0100;
     const ITEM_NO_ACCOUNT_STASH = 0x4000; // or 0x20?
 
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
+
     public static function IconURL($path, $gender='m') {
         $temp = explode('\\', $path);
         $temp = end($temp);
@@ -32,5 +35,42 @@ class Element {
     public static function Int2Float($int) {
         $float = unpack('f', pack('L', $int));
         return $float[1];
+    }
+
+    public static function CultivationString($id) {
+        switch($id) {
+            case 0:
+                return "Spiritual Initiate";
+            case 1:
+                return "Spiritual Adept";
+            case 2:
+                return "Aware of Principle";
+            case 3:
+                return "Aware of Harmony";
+            case 4:
+                return "Aware of Discord";
+            case 5:
+                return "Aware of Coalescence";
+            case 6:
+                return "Transcendant";
+            case 7:
+                return "Enlightened One";
+            case 8:
+                return "Aware of Vacuity";
+            case 20:
+                return "Aware of the Myriad";
+            case 21:
+                return "Master of Harmony";
+            case 22:
+                return "Celestial Sage";
+            case 30:
+                return "Aware of the Void";
+            case 31:
+                return "Master of Discord";
+            case 32:
+                return "Celestial Demon";
+            default:
+                return (string)$id;
+        }
     }
 }

@@ -119,7 +119,8 @@ table.layout td {
 a:link.item-link, a:visited.item-link,
 a:link.mob-link, a:visited.mob-link,
 a:link.npc-link, a:visited.npc-link,
-a:link.pet-link, a:visited.pet-link {
+a:link.pet-link, a:visited.pet-link,
+a:link.quest-link, a:visited.quest-link {
     text-decoration: none;
 }
 

@@ -61,7 +61,7 @@
 {/block}
 
 {block name=more}
-    {if $created_by || $used_for || $used_to_reforge || $dropped_from || $decomposed_from || $same_model || $same_icon || $children || $parents || $sold_by}
+    {if $created_by || $used_for || $used_to_reforge || $dropped_from || $decomposed_from || $same_model || $same_icon || $children || $parents || $sold_by || $from_quests || $for_quests}
     <h3>More Information</h3>
     <div id="more-tabs">
         <ul>
@@ -69,6 +69,8 @@
             {if $sold_by}<li><a href="#more-sold-by">Sold by ({$sold_by|count|number_format})</a></li>{/if}
             {if $dropped_from}<li><a href="#more-dropped">Drops from ({$dropped_from|count|number_format})</a></li>{/if}
             {if $created_by}<li><a href="#more-created">Created with ({$created_by|count|number_format})</a></li>{/if}
+            {if $from_quests}<li><a href="#more-from-quests">Reward from ({$from_quests|count|number_format})</a></li>{/if}
+            {if $for_quests}<li><a href="#more-for-quests">Required for ({$for_quests|count|number_format})</a></li>{/if}
             {if $used_for}<li><a href="#more-used">Can create ({$used_for|count|number_format})</a></li>{/if}
             {if $used_to_reforge}<li><a href="#more-reforges">Reforges ({$used_to_reforge|count|number_format})</a></li>{/if}
             {if $decomposed_from}<li><a href="#more-decompose">Decomposed from ({$decomposed_from|count|number_format})</a></li>{/if}
@@ -219,6 +221,43 @@
                         </td>
                     </tr>
                     {/if}
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+        {/if}
+        {if $from_quests}
+        <div id="more-from-quests">
+            <table class='recipe-table'>
+                <thead>
+                    <tr><th>Quest</th><th>Level</th><th>Quantity</th><th>Probability</th></tr>
+                </thead>
+                <tbody>
+                    {foreach from=$from_quests item=quest}
+                    <tr>
+                        <td>{$quest->link()}</td>
+                        <td>{$quest->min_level}</td>
+                        <td>{($quest->reward_success->items[$item->id]->amount)|number_format}</td>
+                        <td>{($quest->reward_success->items[$item->id]->probability*100)|number_format:3}%</td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+        {/if}
+        {if $for_quests}
+        <div id="more-for-quests">
+            <table class='recipe-table'>
+                <thead>
+                    <tr><th>Quest</th><th>Level</th><th>Quantity</th></tr>
+                </thead>
+                <tbody>
+                    {foreach from=$for_quests item=quest}
+                    <tr>
+                        <td>{$quest->link()}</td>
+                        <td>{$quest->min_level}</td>
+                        <td>{($quest->items[$item->id])|number_format}</td>
+                    </tr>
                     {/foreach}
                 </tbody>
             </table>

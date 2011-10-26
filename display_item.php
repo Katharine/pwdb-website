@@ -123,6 +123,8 @@ $template->assign('dropped_from', $drops_from);
 $template->assign('same_model', $same_model);
 $template->assign('same_icon', $same_icon);
 $template->assign('farmed_from', $farmed_from);
+$template->assign('from_quests', Quest::HasReward($id));
+$template->assign('for_quests', Quest::RequiringItem($id));
 if($item instanceof Equipment) {
     $template->assign('children', $item->find_children());
     $template->assign('parents', $item->find_parents());

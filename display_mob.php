@@ -39,5 +39,6 @@ $template->assign('dq_sell', $dq_sell);
 $template->assign('mob', $mob);
 $template->assign('drops', $drops);
 $template->assign('same_model', $same_model);
+$template->assign('quests', Quest::RequiringMob($id));
 $template->display('mob.tpl', $id);
 ?>

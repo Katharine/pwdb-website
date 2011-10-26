@@ -33,7 +33,14 @@ div.item_tooltip .tooltip_addon {
     color: rgb(128, 128, 255);
 }
 
-ul.tooltip-set {
+.item_tooltip ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    margin-left: 10px;
+}
+
+.item_tooltip ul.tooltip-set {
     list-style-type: none;
     padding: 0px;
     margin: 0px;

@@ -65,4 +65,5 @@ $(function() {
     add_tips('resource');
     add_tips('pet');
     add_tips('npc');
+    add_tips('quest');
 });

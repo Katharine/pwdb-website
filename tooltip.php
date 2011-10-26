@@ -19,6 +19,9 @@ switch($_GET['kind']) {
     case 'npc':
         $item = NPC::FromID($id);
         break;
+    case 'quest':
+        $item = Quest::FromID($id);
+        break;
 }
 if(!$item) {
     print "<div class='item_tooltip'>Item not found.</div>";

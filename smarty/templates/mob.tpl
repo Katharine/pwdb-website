@@ -73,11 +73,12 @@
 {/block}
 
 {block name=more}
-{if $drops || $same_model}
+{if $drops || $same_model || $quests}
 <h3>More information</h3>
 <div id="more-tabs">
     <ul>
         {if $drops}<li><a href="#tab-drops">Drops ({$drops|count|number_format})</a></li>{/if}
+        {if $quests}<li><a href="#tab-quests">Required for ({$quests|count|number_format})</a></li>{/if}
         {if $same_model}<li><a href="#tab-same-model">Same model ({$same_model|count|number_format})</a></li>{/if}
     </ul>
     {if $drops}
@@ -98,6 +99,28 @@
                     <td>
                         <span class='level-adjust-drops'>{($mob->real_drop_rate($drop.rate) * 100)|number_format:2}</span>%
                     </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+    {/if}
+    {if $quests}
+    <div id="tab-quests">
+        <table class='recipe-table'>
+            <thead>
+                <tr><th>Quest</th><th>Level</th><th>Drop</th><th>Required</th><th>Average Kills</th></tr>
+            </thead>
+            <tbody>
+                {foreach from=$quests item=quest}
+                <tr>
+                    <td>{$quest->path()}</td>
+                    <td>{$quest->min_level}</td>
+                    {$chase=$quest->required_mobs[$mob->id]}
+                    {$required_item=Item::FromID($chase->item_id)}
+                    <td>{if $required_item}{$required_item->link()} ({($chase->drop_rate * 100)|number_format}%){/if}</td>
+                    <td>{if $required_item}{$chase->item_count}{else}{$chase->mob_count}{/if}</td>
+                    <td>{if $required_item}{($chase->item_count/$chase->drop_rate)|number_format}{else}{$chase->mob_count}{/if}</td>
                 </tr>
                 {/foreach}
             </tbody>

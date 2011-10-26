@@ -5,6 +5,12 @@ RewriteRule ^mob/([0-9]+)$ display_mob.php?id=$1
 RewriteRule ^resource/([0-9]+)$ display_resource.php?id=$1
 RewriteRule ^pet/([0-9]+)$ display_pet.php?id=$1
 RewriteRule ^npc/([0-9]+)$ display_npc.php?id=$1
+RewriteRule ^quest/([0-9]+)$ display_quest.php?id=$1
+
+# For compatibility with pwdatabase.com
+Redirect /pwi/ /
+Redirect /items/ /item/
+Redirect /mine/ /resource/
 
 ErrorDocument 404 /404.php
 
