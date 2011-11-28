@@ -2,6 +2,8 @@
 require_once 'utils.php';
 class Translate {
     const GOOGLE_API_KEY = "AIzaSyAq8nK8h0B8bBTqe4guwx1PLhCR5diwvSw"; // This key only works from 66.228.39.46.
+    // This array contains all terms looked up during this session.
+    // Its initial contents given here are the most common phrases.
     private static $cache = array(
         'Surfaces' => 'Surfaces',
         'surface' => 'surface',
@@ -116,10 +118,10 @@ class Translate {
     }
 
     public static function TranslateField($name, $formatted=false) {
-        if(strpos($name, 'N/A') === false) {
+        if(strpos(strtoupper($name), 'N/A') === false) {
             return null;
         } else {
-            return self::TranslateText(str_replace('N/A', '', $name), $formatted);
+            return self::TranslateText(str_ireplace('N/A', '', $name), $formatted);
         }
     }
 }
