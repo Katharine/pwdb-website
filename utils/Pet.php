@@ -205,8 +205,8 @@ class Pet implements Serializable {
     }
 
     public function egg() {
-        $link = MySQL::instance();
-        $record = mysql_fetch_object($link->query("SELECT * FROM eggs WHERE pet = {$this->_id} LIMIT 1", true));
+        $link = Humongous::instance();
+        $record = (object)$link->items->findOne(array('pet' => $this->_id));
         if($record) {
             return new Egg($record);
         }

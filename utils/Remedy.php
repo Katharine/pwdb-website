@@ -2,10 +2,6 @@
 require_once 'utils.php';
 
 class Remedy extends Item {
-    public static function FromID($id) {
-        $id = (int)$id;
-        return new Remedy(mysql_fetch_object(MySQL::instance()->query("SELECT * FROM remedies WHERE id = {$id}", true)));
-    }
 
     protected $_level, $_hp, $_mp, $_cooldown, $_recovery_time;
     const SERIALIZED_SIZE = 5;

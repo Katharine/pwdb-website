@@ -17,7 +17,6 @@ class MemoryCache {
     }
 
     public function get($var) {
-        //return false;
         if(is_array($var)) {
             $this->gets += count($var);
         } else {
@@ -48,7 +47,6 @@ class MemoryCache {
     }
 
     public function set($var, $val) {
-        //return false;
         ++$this->sets;
         return $this->memcache->set($var, $val);
     }

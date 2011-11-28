@@ -7,11 +7,6 @@ class Armour extends Equipment {
 
     const SERIALIZED_SIZE = 9;
 
-    public static function FromID($id) {
-        $id = (int)$id;
-        return new Armour(mysql_fetch_object(MySQL::instance()->query("SELECT * FROM armor WHERE id = {$id}", true)));
-    }
-
     protected function render_tooltip_stats() {
         $tip = '';
         if($this->_evasion != 0) {
@@ -75,8 +70,6 @@ class Armour extends Equipment {
 
         // Our parent expects us to fill these in.
         $this->_gender_icons = true;
-        $this->_craft_sockets = array($record->craft_0_socket, $record->craft_1_socket, $record->craft_2_socket, $record->craft_3_socket, $record->craft_4_socket);
-        $this->_drop_sockets = array($record->drop_0_socket, $record->drop_1_socket, $record->drop_2_socket, $record->drop_3_socket, $record->drop_4_socket);
     }
 
     public function socket_stones($sockets) {

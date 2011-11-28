@@ -2,11 +2,6 @@
 require_once 'utils.php';
 
 class Tome extends Item {
-    public static function FromID($id) {
-        $id = (int)$id;
-        return new Tome(mysql_fetch_object(MySQL::instance()->query("SELECT * FROM tomes WHERE id = {$id}", true)));
-    }
-
     protected $_decompose_price, $_decompose_to, $_decompose_time, $_decompose_amount;
 
     const SERIALIZED_SIZE = 4;

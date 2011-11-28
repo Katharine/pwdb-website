@@ -2,16 +2,6 @@
 require_once 'utils.php';
 
 class Egg extends Item {
-    public static function FromID($id) {
-        $id = (int)$id;
-        $result = mysql_fetch_object(MySQL::instance()->query("SELECT * FROM eggs WHERE id = {$id}", true));
-        if($result) {
-            return new Egg($result);
-        } else {
-            return null;
-        }
-    }
-
     protected $_pet, $_hatch_price, $_unhatch_price, $_loyalty;
     const SERIALIZED_SIZE = 4;
 

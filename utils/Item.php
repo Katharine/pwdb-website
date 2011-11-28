@@ -15,68 +15,48 @@ class Item implements Serializable {
         }
         $ret = MemoryCache::instance()->get('item-id-'.$id);
         if(!$ret) {
-            $link = MySQL::instance();
-            $result = mysql_fetch_object($link->query("SELECT type FROM items WHERE id = " . (int)$id, true));
-            if(!$result) {
+            $record = (Humongous::instance()->items->findOne(array('id' => (int)$id)));
+            if(!$record) {
                 return null;
             }
-            switch($result->type) {
-                case 'weapon':
-                    $ret = Weapon::FromID($id);
-                    break;
-                case 'armour':
-                    $ret = Armour::FromID($id);
-                    break;
-                case 'ornament':
-                    $ret = Ornament::FromID($id);
-                    break;
-                case 'tome':
-                    $ret = Tome::FromID($id);
-                    break;
-                case 'remedy':
-                    $ret = Remedy::FromID($id);
-                    break;
-                case 'shard':
-                    $ret = Soulgem::FromID($id);
-                    break;
-                case 'egg':
-                    $ret = Egg::FromID($id);
-                    break;
-                default:
-                    $ret = new Item(mysql_fetch_object($link->query("SELECT * FROM generic_items WHERE id = " . (int)$id, true)));
-                    break;
-            }
+            $record = (object)$record;
+            $ret = self::FromRecord($record);
             MemoryCache::instance()->set('item-id-'.$id, $ret);
         }
         self::$cache[$id] = $ret;
         return $ret;
     }
 
+    public static function FromRecord($record) {
+        switch($record->kind) {
+            case 'weapon':
+                return new Weapon($record);
+            case 'armour':
+                return new Armour($record);
+            case 'ornament':
+                return new Ornament($record);
+            case 'tome':
+                return new Tome($record);
+            case 'remedy':
+                return new Remedy($record);
+            case 'shard':
+                return new Soulgem($record);
+            case 'egg':
+                return new Egg($record);
+            default:
+                return new Item($record);
+        }
+    }
+
     public static function DecomposedFrom($id) {
         $id = (int)$id;
         $decomposed_from = array();
-        $link = MySQL::instance();
-        $results = $link->query("SELECT * FROM weapons WHERE decompose_to = {$id}", true);
-        while($row = mysql_fetch_object($results)) {
-            $it = new Weapon($row);
-            if($it->decompose_amount > 0) {
-                $decomposed_from[] = $it;
-            }
+
+        $records = Humongous::instance()->items->find(array('decompose_to' => $id));
+        foreach($records as $record) {
+            $decomposed_from[] = self::FromRecord((object)$record);
         }
-        $results = $link->query("SELECT * FROM armor WHERE decompose_to = {$id}", true);
-        while($row = mysql_fetch_object($results)) {
-            $it = new Armour($row);
-            if($it->decompose_amount > 0) {
-                $decomposed_from[] = $it;
-            }
-        }
-        $results = $link->query("SELECT * FROM ornaments WHERE decompose_to = {$id}", true);
-        while($row = mysql_fetch_object($results)) {
-            $it = new Ornament($row);
-            if($it->decompose_amount > 0) {
-                $decomposed_from[] = $it;
-            }
-        }
+
         return $decomposed_from;
     }
 
@@ -89,6 +69,9 @@ class Item implements Serializable {
     }
 
     protected function from_array($array) {
+        if(count($array) < self::SERIALIZED_SIZE) {
+            throw new Exception("too small");
+        }
         list($this->_id, $this->_colour, $this->_name, $this->_description, $this->_class_mask, $this->_icon, $this->_stack_count,
             $this->_type, $this->_subtype, $this->_gender_icons,
             $this->_sell_price, $this->_buy_price, $this->_grade, $this->_dq_sell) = $array;
@@ -106,6 +89,10 @@ class Item implements Serializable {
         if($record == null) {
             return;
         }
+        if(!isset($record->kind)) {
+            print_r($record);
+            throw new Exception("Death.");
+        }
         $this->_id = (int)$record->id;
         $this->_colour = (int)$record->colour;
         $this->_name = $record->name;
@@ -122,8 +109,8 @@ class Item implements Serializable {
         if(isset($record->subtype)) {
             $this->_subtype = (int)$record->subtype;
         }
-        $this->_sell_price = (int)$record->sell_price;
-        $this->_buy_price = (int)$record->buy_price;
+        $this->_sell_price = isset($record->sell_price) ? (int)$record->sell_price : null;
+        $this->_buy_price = isset($record->buy_price) ? (int)$record->buy_price : null;
         $this->_gender_icons = false;
         if($record->stack_count) {
             $this->_stack_count = (int)$record->stack_count;

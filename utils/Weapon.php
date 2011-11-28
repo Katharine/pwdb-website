@@ -7,11 +7,6 @@ class Weapon extends Equipment {
 
     const SERIALIZED_SIZE = 10;
 
-    public static function FromID($id) {
-        $id = (int)$id;
-        return new Weapon(mysql_fetch_object(MySQL::instance()->query("SELECT * FROM weapons WHERE id = {$id}", true)));
-    }
-
     public function __construct($record=null) {
         parent::__construct($record);
         if($record == null) {
@@ -30,9 +25,7 @@ class Weapon extends Equipment {
         $this->_range = (float)$record->range;
         $this->_interval = (float)$this->_subtype->interval;
         $this->_unique_addon_probability = (float)$record->unique_addon;
-        // Our parent expects us to fill these in.
-        $this->_craft_sockets = array((float)$record->craft_0_socket, (float)$record->craft_1_socket, (float)$record->craft_2_socket);
-        $this->_drop_sockets = array((float)$record->drop_0_socket, (float)$record->drop_1_socket, (float)$record->drop_2_socket);
+        $this->_unique_addons = $record->unique_addons;
     }
 
     protected function to_array() {

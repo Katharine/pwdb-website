@@ -1,4 +1,5 @@
 <?php
+die("Search is currently down for maintenance.");
 require_once 'utils/utils.php';
 
 $query = $_REQUEST['q'];

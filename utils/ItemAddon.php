@@ -3,30 +3,65 @@ require_once 'utils.php';
 
 class ItemAddon implements Serializable {
     private static $cache = array();
-    public static function FromID($id) {
-        if($id == 0) {
-            return null;
+    public static function FromID($ids) {
+        $array = true;
+        if(!is_array($ids)) {
+            $ids = array($ids);
+            $array = false;
         }
-        if(isset(self::$cache[$id])) {
-            return self::$cache[$id];
+        $returns = array();
+        $queries = array();
+        foreach($ids as $id) {
+            $id = (int)$id;
+            if($id == 0) {
+                $returns[$id] = 0;
+                continue;
+            }
+            if(isset(self::$cache[$id])) {
+                $returns[$id] = self::$cache[$id];
+                continue;
+            }
+            $ret = MemoryCache::instance()->get('ia-id'.$id);
+            if($ret) {
+                $returns[$id] = $ret;
+                self::$cache[$id] = $ret;
+                continue;
+            }
+            $queries[] = $id;
         }
-        $ret = MemoryCache::instance()->get('ia-id'.$id);
-        if(!$ret) {
+        if(count($queries)) {
             $link = MySQL::instance();
-            $result = $link->query("SELECT addons.id as addon, display, value_type, multiply, `values`, value1, value2, value3, `group`FROM addon_groups, addons WHERE addons.group = addon_groups.id AND addons.id = " . (int)$id, true);
-            $row = mysql_fetch_object($result);
-            if(!$row) {
-                $ret = null;
-            } else {
-                $ret = new ItemAddon($row);
-                MemoryCache::instance()->set('ia-id'.$id, $ret);
+            $result = $link->query("SELECT addons.id as addon, display, value_type, multiply, `values`, value1, value2, value3, `group` FROM addon_groups, addons WHERE addons.group = addon_groups.id AND addons.id IN (" . implode(', ', $queries) . ")", true);
+            while($row = mysql_fetch_object($result)) {
+                $returns[$row->addon] = new ItemAddon($row);
+                MemoryCache::instance()->set('ia-id'.$row->addon, $ret);
             }
         }
-        self::$cache[$id] = $ret;
-        return $ret;
+        foreach($queries as $query) {
+            if(!isset($returns[$query])) {
+                $returns[$query] = 0;
+            }
+        }
+        if($array)
+            return $returns;
+        else
+            return array_pop($returns);
+    }
+
+    public static function FromRecords($records) {
+        $addons = array();
+        foreach($records as $record) {
+            $addons[] = $record['id'];
+        }
+        $addons = self::FromID($addons);
+        foreach($records as $record) {
+            $addons[$record['id']]->probability = $record['probability'];
+        }
+        return array_values($addons);
     }
 
     public static function AddonsForItem($item, $type = null) {
+        trigger_error("Use of dead function ItemAddon::AddonsForItem({$item}, '{$type}')", E_USER_WARNING);
         $link = MySQL::instance();
         $type_query = '';
         if($type != null) {
@@ -66,6 +101,8 @@ class ItemAddon implements Serializable {
         $this->group = $record->group;
         if(isset($record->probability)) {
             $this->probability = (float)$record->probability;
+        }
+        if(isset($record->type)) {
             $this->type = $record->type;
         }
         $this->id = (int)$record->addon;

@@ -5,15 +5,15 @@ class Equipment extends Item {
     protected $_craft_sockets, $_drop_sockets, $_addon_probability, $_durability, $_flags;
     protected $_max_durability, $_decompose_price, $_decompose_time, $_decompose_to, $_decompose_amount;
     protected $_str, $_dex, $_vit, $_mag, $_level, $_repair_price, $_refine_bonus, $_nonrandom_addons;
-    protected $_reputation;
+    protected $_reputation, $_drop_addons, $_craft_addons, $_unique_addons;
     // Not serialised:
     protected $_children, $_decomposes_from, $_parents;
 
-    const SERIALIZED_SIZE = 19;
+    const SERIALIZED_SIZE = 22;
 
     public function __construct($record = null) {
         parent::__construct($record);
-        $this->_addon_probability = array((float)$record->addons_0, (float)$record->addons_1, (float)$record->addons_2, (float)$record->addons_3);
+        $this->_addon_probability = $record->addon_count;
         $this->_durability = (int)$record->durability;
         $this->_max_durability = (int)$record->max_durability;
         $this->_decompose_price = (int)$record->decompose_price;
@@ -32,6 +32,11 @@ class Equipment extends Item {
         $this->_nonrandom_addons = (bool)((int)$record->nonrandom_addons);
         $this->_flags = (int)$record->flags;
         $this->_reputation = (int)$record->reputation;
+        $this->_craft_sockets = isset($record->craft_socket) ? $record->craft_socket : array();
+        $this->_drop_sockets = isset($record->drop_sockets) ? $record->drop_sockets : array();
+        $this->_drop_addons = $record->drop_addons;
+        $this->_craft_addons = $record->craft_addons;
+        $this->_unique_addons = array();
     }
 
     protected function to_array() {
@@ -39,7 +44,7 @@ class Equipment extends Item {
             $this->_craft_sockets, $this->_drop_sockets, $this->_addon_probability, $this->_durability, $this->_flags,
             $this->_max_durability, $this->_decompose_price, $this->_decompose_time, $this->_decompose_to, $this->_decompose_amount,
             $this->_str, $this->_dex, $this->_vit, $this->_mag, $this->_level, $this->_repair_price, $this->_refine_bonus, $this->_nonrandom_addons,
-            $this->_reputation
+            $this->_reputation, $this->_drop_addons, $this->_craft_addons, $this->_unique_addons
         ), parent::to_array());
     }
 
@@ -47,7 +52,7 @@ class Equipment extends Item {
         list($this->_craft_sockets, $this->_drop_sockets, $this->_addon_probability, $this->_durability, $this->_flags,
             $this->_max_durability, $this->_decompose_price, $this->_decompose_time, $this->_decompose_to, $this->_decompose_amount,
             $this->_str, $this->_dex, $this->_vit, $this->_mag, $this->_level, $this->_repair_price, $this->_refine_bonus, $this->_nonrandom_addons,
-            $this->_reputation) = array_slice($array, 0, self::SERIALIZED_SIZE);
+            $this->_reputation, $this->_drop_addons, $this->_craft_addons, $this->_unique_addons) = array_slice($array, 0, self::SERIALIZED_SIZE);
         parent::from_array(array_slice($array, self::SERIALIZED_SIZE));
     }
 
@@ -120,7 +125,8 @@ class Equipment extends Item {
     }
 
     protected function render_tooltip_addons() {
-        $addons = ItemAddon::AddonsForItem($this->_id, 'drop');
+        $drop_addons = array();
+        $addons = ItemAddon::FromRecords($this->_drop_addons);
         $tip = '';
         foreach($addons as $addon) {
             $tip .= "<p class='tooltip_addon'>" . htmlentities($addon->label()) . "</p>";
@@ -131,7 +137,10 @@ class Equipment extends Item {
     /* virtual */ protected function render_tooltip_stats() { return ''; }
 
     public function get_addons($type=null) {
-        $addons = ItemAddon::AddonsForItem($this->_id, $type);
+        $records = $this->_drop_addons;
+        if($type == 'craft') $records = $this->_craft_addons;
+        else if($type == 'unique') $records=$this->_unique_addons;
+        $addons = ItemAddon::FromRecords($records);
         $groups = array();
         foreach($addons as $addon) {
             if(!isset($groups[$addon->group])) {

@@ -3,7 +3,7 @@ require_once 'utils/utils.php';
 
 $template = new Template();
 $id = (int)$_GET['id'];
-$template->caching = 1;
+$template->caching = 0;
 if($template->isCached('items/generic.tpl', (string)$id)) {
     $template->display('items/generic.tpl', (string)$id);
     die();
@@ -55,48 +55,52 @@ foreach($created_by as $key => $recipe) {
 }
 
 $link = MySQL::instance();
+$mongo = Humongous::instance();
+
+function do_query($field, $model, $id) {
+    global $mongo;
+    $querypart = array();
+    if(!is_array($field)) {
+        $querypart[$field] = $model;
+    } else {
+        $querypart = array();
+        foreach($field as $f) {
+            $querypart[$f] = $model;
+        }
+        $querypart = array(array($field => $model, 'name' => array('$ne' => ''), 'id' => array('$ne' => $id)));
+    }
+
+    $querypart['name'] = array('$ne' => '');
+    $querypart['id'] = array('$ne' => $id);
+    $records = $mongo->items->find($querypart);
+    $same_model = array();
+    foreach($records as $record) {
+        $record = (object)$record;
+        $same_model[] = array('item' => Item::FromRecord($record), 'model' => array($model), 'translated' => array(Translate::TranslatePath($model)));
+    }
+    return $same_model;
+}
 
 $same_model = array();
 if(!empty($item->model)) {
-    $link->query("SELECT * FROM armor WHERE id != {$id} AND name != '' AND model = '".$link->escape($item->model)."'");
-    while($row = $link->fetchrow()) {
-        $same_model[] = array('item' => new Armor($row), 'model' => array($item->model), 'translated' => array(Translate::TranslatePath($item->model)));
-    }
-    $link->query("SELECT * FROM ornaments WHERE id != {$id} AND name != '' AND model = '".$link->escape($item->model)."'");
-    while($row = $link->fetchrow()) {
-        $same_model[] = array('item' => new Ornament($row), 'model' => array($item->model), 'translated' => array(Translate::TranslatePath($item->model)));
-    }
-} else if(!empty($item->left_model) || !empty($item->right_model)) {
-    $query = "SELECT * FROM weapons WHERE id != {$id} AND name != ''";
-    $models = array();
-    $translations = array();
-    if(!empty($item->left_model)) {
-        $query .= " AND model_left = '".$link->escape($item->left_model)."'";
-        $models[] = $item->left_model;
-        $translations[] = Translate::TranslatePath($item->left_model);
-    }
-    if(!empty($item->right_model)) {
-        $query .= " AND model_right = '".$link->escape($item->right_model)."'";
-        $models[] = $item->right_model;
-        $translations[] = Translate::TranslatePath($item->right_model);
-    }
-    $link->query($query);
-    while($row = $link->fetchrow()) {
-        $same_model[] = array('item' => new Weapon($row), 'model' => $models, 'translated' => $translations);
-    }
+    $same_model = do_query('model', $item->model, $id);
+} else if(!empty($item->left_model)) {
+    if(!empty($item->right_model))
+        $same_model = do_query(array('model_right', 'model_left'), $item->left_model, $id);
+    else
+        $same_model = do_query('model_left', $item->left_model, $id);
+} else if(!empty($item->right_model)) {
+    $same_model = do_query('model_right', $item->right_model, $id);
 }
 
 $same_icon = array();
 $icon_parts = explode('\\', $item->icon);
 $actual_icon = array_pop($icon_parts);
-// Don't do this if actual_icon is empty or we try and load every extant item and run out of memory.
 if(!empty($actual_icon)) {
-    $link->query("SELECT id, icon FROM items WHERE id != {$id} AND name != '' AND icon LIKE '%\\\\\\\\".$link->escape($actual_icon)."'");
-    while($row = $link->fetchrow()) {
-        $identical = Item::FromID($row->id);
-        if($identical) {
-            $same_icon[] = array('item' => $identical, 'icon' => $row->icon, 'translated' => Translate::TranslatePath($row->icon));
-        }
+    $records = $mongo->items->find(array('real_icon' => $actual_icon, 'id' => array('$ne' => $id)));
+    foreach($records as $record) {
+        $record = (object)$record;
+        $same_icon[] = array('item' => Item::FromRecord($record), 'icon' => $record->icon, 'translated' => Translate::TranslatePath($record->icon));
     }
 }
 
@@ -110,7 +114,6 @@ while($row = $link->fetchrow()) {
     }
     $farmed_from[$row->map]->add_point($row->x, $row->y, $row->z, 'resource', $row->spawn);
 }
-
 
 $template->assign('item', $item);
 $template->assign('created_by', $created_by);

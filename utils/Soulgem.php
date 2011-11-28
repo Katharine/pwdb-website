@@ -2,11 +2,6 @@
 require_once 'utils.php';
 
 class Soulgem extends Item {
-    public static function FromID($id) {
-        $id = (int)$id;
-        return new Soulgem(mysql_fetch_object(MySQL::instance()->query("SELECT * FROM shards WHERE id = {$id}", true)));
-    }
-
     protected $_imbue_price, $_purge_price, $_weapon_addon, $_armour_addon, $_weapon_string, $_armour_string;
 
     const SERIALIZED_SIZE = 6;

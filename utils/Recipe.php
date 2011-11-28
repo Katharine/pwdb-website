@@ -13,7 +13,7 @@ class Recipe {
             GROUP BY recipe_input.recipe", true);
         $recipes = array();
         while($row = mysql_fetch_object($results)) {
-            $recipes[] = new Recipe($row->recipe);
+            $recipes[] = new Recipe((int)$row->recipe);
         }
         return $recipes;
     }
@@ -121,7 +121,7 @@ class Recipe {
         $result = $link->query("SELECT item, probability FROM recipe_output WHERE recipe = {$id}", true);
         $this->outputs = array();
         while($row = mysql_fetch_object($result)) {
-            $item = Item::FromID($row->item);
+            $item = Item::FromID((int)$row->item);
             if($item)
                 $this->outputs[] = array('item' => $item, 'probability' => (float)$row->probability * (1 - $this->failure_rate));
         }

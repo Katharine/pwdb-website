@@ -7,11 +7,6 @@ class Ornament extends Equipment {
 
     const SERIALIZED_SIZE = 9;
 
-    public static function FromID($id) {
-        $id = (int)$id;
-        return new Ornament(mysql_fetch_object(MySQL::instance()->query("SELECT * FROM ornaments WHERE id = {$id}", true)));
-    }
-
     protected function render_tooltip_stats() {
         $tip = '';
         if($this->_evasion != 0) {
