@@ -54,6 +54,9 @@
         {if $item->pet}
             <li>Hatches to{$item->pet->link()}</li>
         {/if}
+        {if $item->quests && count($item->quests) == 1}
+            <li>Triggers quest{Quest::FromID($item->quests[0]->id)->link()}</li>
+        {/if}
         {block name='item_sidebar_list'}{/block}
         </ul>
     </div>
@@ -61,11 +64,11 @@
 {/block}
 
 {block name=more}
-    {if $created_by || $used_for || $used_to_reforge || $dropped_from || $decomposed_from || $same_model || $same_icon || $children || $parents || $sold_by || $from_quests || $for_quests}
-    <h3>More Information</h3>
+    {* {if $created_by || $used_for || $used_to_reforge || $dropped_from || $decomposed_from || $same_model || $same_icon || $children || $parents || $sold_by || $from_quests || $for_quests || $contents} *}
     <div id="more-tabs">
         <ul>
             {if $children || $parents}<li><a href="#more-item-tree">Item tree</a></li>{/if}
+            {if $contents}<li><a href="#more-contents">Contents ({$contents|count|number_format})</a></li>{/if}
             {if $sold_by}<li><a href="#more-sold-by">Sold by ({$sold_by|count|number_format})</a></li>{/if}
             {if $dropped_from}<li><a href="#more-dropped">Drops from ({$dropped_from|count|number_format})</a></li>{/if}
             {if $created_by}<li><a href="#more-created">Created with ({$created_by|count|number_format})</a></li>{/if}
@@ -74,6 +77,7 @@
             {if $used_for}<li><a href="#more-used">Can create ({$used_for|count|number_format})</a></li>{/if}
             {if $used_to_reforge}<li><a href="#more-reforges">Reforges ({$used_to_reforge|count|number_format})</a></li>{/if}
             {if $decomposed_from}<li><a href="#more-decompose">Decomposed from ({$decomposed_from|count|number_format})</a></li>{/if}
+            <li><a href="#more-comments">Comments{if $comments} ({$comments|count}){/if}</a></li>
             {if $same_model}<li><a href="#more-same-model">Same model ({$same_model|count|number_format})</a></li>{/if}
             {if $same_icon}<li><a href="#more-same-icon">Same icon ({$same_icon|count|number_format})</a></li>{/if}
         </ul>
@@ -415,6 +419,26 @@
             </table>
         </div>
         {/if}
+        {if $contents}
+        <div id="more-contents">
+            <table class='recipe-table'>
+                <thead>
+                    <tr><th>Item</th><th>Probability</th></tr>
+                </thead>
+                <tbody>
+                    {foreach from=$contents item=content}
+                    <tr>
+                        <td>{if $content->amount > 1}{$content->amount|number_format} x{/if}{if $content->item}{$content->item->link()}{/if}</td>
+                        <td>{($content->probability*100)|number_format:3}%</td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+        {/if}
+        <div id="more-comments">
+            {include file='comments.tpl'}
+        </div>
     </div>
-    {/if}
+    {* {/if} *}
 {/block}

@@ -1,4 +1,4 @@
-{extends file='items/generic.tpl'}
+{extends file='item/generic.tpl'}
 
 {block name='item_details'}
     <div class="item-random-stats">

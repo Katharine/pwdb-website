@@ -4,11 +4,11 @@ require_once 'utils/utils.php';
 $template = new Template();
 $id = (int)$_GET['id'];
 $template->caching = 0;
-if($template->isCached('items/generic.tpl', (string)$id)) {
-    $template->display('items/generic.tpl', (string)$id);
+if($template->isCached('item/generic.tpl', (string)$id)) {
+    $template->display('item/generic.tpl', (string)$id);
     die();
-} else if($template->isCached('items/equipment.tpl', (string)$id)) {
-    $template->display('items/equipment.tpl', (string)$id);
+} else if($template->isCached('item/equipment.tpl', (string)$id)) {
+    $template->display('item/equipment.tpl', (string)$id);
     die();
 }
 $item = Item::FromID($_GET['id']);
@@ -63,11 +63,10 @@ function do_query($field, $model, $id) {
     if(!is_array($field)) {
         $querypart[$field] = $model;
     } else {
-        $querypart = array();
+        $querypart['$or'] = array();
         foreach($field as $f) {
-            $querypart[$f] = $model;
+            $querypart['$or'][] = array($f => $model);
         }
-        $querypart = array(array($field => $model, 'name' => array('$ne' => ''), 'id' => array('$ne' => $id)));
     }
 
     $querypart['name'] = array('$ne' => '');
@@ -97,7 +96,7 @@ $same_icon = array();
 $icon_parts = explode('\\', $item->icon);
 $actual_icon = array_pop($icon_parts);
 if(!empty($actual_icon)) {
-    $records = $mongo->items->find(array('real_icon' => $actual_icon, 'id' => array('$ne' => $id)));
+    $records = $mongo->items->find(array('real_icon' => $actual_icon, 'id' => array('$ne' => $id), 'name_prefix' => array('$ne' => '')));
     foreach($records as $record) {
         $record = (object)$record;
         $same_icon[] = array('item' => Item::FromRecord($record), 'icon' => $record->icon, 'translated' => Translate::TranslatePath($record->icon));
@@ -115,6 +114,11 @@ while($row = $link->fetchrow()) {
     $farmed_from[$row->map]->add_point($row->x, $row->y, $row->z, 'resource', $row->spawn);
 }
 
+$contents = array();
+if($item instanceof QuestTrigger) {
+    $contents = $item->contents();
+}
+
 $template->assign('item', $item);
 $template->assign('created_by', $created_by);
 $template->assign('used_for', $used_for);
@@ -128,13 +132,22 @@ $template->assign('same_icon', $same_icon);
 $template->assign('farmed_from', $farmed_from);
 $template->assign('from_quests', Quest::HasReward($id));
 $template->assign('for_quests', Quest::RequiringItem($id));
+$template->assign('contents', $contents);
 if($item instanceof Equipment) {
+    $template->assign('comments', Comment::FetchComments($id, 'item/equipment'));
+    $template->assign('comment_id', $id);
+    $template->assign('comment_class', 'item/equipment');
+
     $template->assign('children', $item->find_children());
     $template->assign('parents', $item->find_parents());
-    $template->display('items/equipment.tpl', $id); // Equipment
+    $template->display('item/equipment.tpl', $id); // Equipment
 } else {
+    $template->assign('comments', Comment::FetchComments($id, 'item/generic'));
+    $template->assign('comment_id', $id);
+    $template->assign('comment_class', 'item/generic');
+
     $template->assign('children', null);
     $template->assign('parents', null);
-    $template->display('items/generic.tpl', $id); // Generic!
+    $template->display('item/generic.tpl', $id); // Generic
 }
 ?>

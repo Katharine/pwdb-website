@@ -43,6 +43,8 @@ class Item implements Serializable {
                 return new Soulgem($record);
             case 'egg':
                 return new Egg($record);
+            case 'quest trigger':
+                return new QuestTrigger($record);
             default:
                 return new Item($record);
         }
@@ -52,7 +54,7 @@ class Item implements Serializable {
         $id = (int)$id;
         $decomposed_from = array();
 
-        $records = Humongous::instance()->items->find(array('decompose_to' => $id));
+        $records = Humongous::instance()->items->find(array('decompose_to' => $id))->limit(500);
         foreach($records as $record) {
             $decomposed_from[] = self::FromRecord((object)$record);
         }
@@ -103,8 +105,8 @@ class Item implements Serializable {
             $this->_class_mask = 0;
         }
         $this->_icon = $record->icon;
-        if(isset($record->type)) {
-            $this->_type = $record->type;
+        if(isset($record->kind)) {
+            $this->_type = $record->kind;
         }
         if(isset($record->subtype)) {
             $this->_subtype = (int)$record->subtype;

@@ -32,7 +32,7 @@
 <body>
 {block name=body}{/block}
 <div id='footer'>
-    <p id='poweredby'>jQuery 1.6.3 / PHP 5.3.2 / MySQL 5.1.41 / Python 2.7.1 / Perfect World 1.4.4 (560) / Kathikins<br />
+    <p id='poweredby'>Perfect World 1.4.4 (560)<br />
     {block name=generationstats}MySQL: {MySQL::instance()->query_count()|number_format} queries in {MySQL::instance()->query_time()|number_format:3} seconds. Memcache: {MemoryCache::instance()->hit_count()|number_format}/{MemoryCache::instance()->get_count()|number_format} gets, {MemoryCache::instance()->set_count()|number_format} sets. {$fresh=1}Page {nocache}{if isset($fresh)}freshly{/if}{/nocache} generated {$smarty.now|date_format}.{/block}</p>
 </div>
 <!-- {MySQL::instance()->log()|print_r:true} -->
